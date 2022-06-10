@@ -1,5 +1,3 @@
-import Head from "next/head";
-import Image from "next/image";
 import { useSockets } from "../../context/socket.context";
 
 import RoomsContainer from "../../containers/Rooms";
@@ -24,11 +22,12 @@ export default function RealtimeChat() {
 
   useEffect(() => {
     if (usernameRef)
+      // 브라우저 로컬스토리지에 유저 이름을 기억해 보여준다.
       usernameRef.current.value = localStorage.getItem("username") || "";
   }, []);
 
   return (
-    <div>
+    <div className="mx-auto w-full max-w-xl">
       {!username && (
         <div>
           <div>
@@ -38,7 +37,7 @@ export default function RealtimeChat() {
         </div>
       )}
       {username && (
-        <div>
+        <div className="mx-auto w-full max-w-xl">
           <RoomsContainer />
           <MessagesContainer />
         </div>

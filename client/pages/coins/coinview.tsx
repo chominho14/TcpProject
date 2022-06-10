@@ -50,18 +50,24 @@ interface AllTickersInterface {
 
 const Container = styled.div`
   border-radius: 10px;
-  max-width: 480px;
-  width: 480px;
+  max-width: 640px;
+  width: 100%;
   padding: 40px 10px;
   box-sizing: border-box;
   box-shadow: black 5px 5px 20px 0px;
-  margin: 100px 0;
   background-color: ${(props) => props.theme.bgColor};
   color: ${(props) => props.theme.textColor};
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 30px;
+  margin-bottom: 30px;
 `;
 
 const Header = styled.header`
-  margin-bottom: 30px;
+  height: 10vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 const Title = styled.h1`
@@ -72,6 +78,7 @@ const Title = styled.h1`
 
 const CoinUl = styled.ul`
   padding: 20px;
+  list-style: none;
 `;
 
 const CoinNav = styled.div`
