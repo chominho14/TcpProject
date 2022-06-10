@@ -1,71 +1,10 @@
-import styled from "styled-components";
 import { useQuery } from "react-query";
-import { fetchCoins } from "../../api/api";
-import { Helmet } from "react-helmet";
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import { isDarkAtom } from "../../utils/atoms";
-import Link from "next/link";
+import styled from "styled-components";
+import Coin from "../../components/coin";
+import { handleFetchAllCoins, handleFetchAllTickers } from "../../api/api";
+import { useCallback, useEffect, useState } from "react";
 
-const Container = styled.div`
-  padding: 0px 20px;
-  max-width: 480px;
-  margin: 0 auto;
-`;
-
-const Header = styled.header`
-  height: 10vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-const CoinsList = styled.ul``;
-
-const Coin = styled.li`
-  background-color: ${(props) => props.theme.accentColor};
-  color: ${(props) => props.theme.textColor};
-  border-radius: 15px;
-  margin-bottom: 10px;
-  a {
-    display: flex;
-    align-items: center;
-    padding: 20px;
-    transition: color 0.3s ease-in;
-  }
-  &:hover {
-    a {
-      color: ${(props) => props.theme.hoverColor};
-    }
-  }
-`;
-
-const Title = styled.h1`
-  font-size: 48px;
-  color: ${(props) => props.theme.accentColor};
-`;
-
-const Loader = styled.span`
-  text-align: center;
-  display: block;
-`;
-
-const Img = styled.img`
-  width: 25px;
-  height: 25px;
-  margin-right: 10px;
-`;
-
-const ToggleBtn = styled.button`
-  position: relative;
-  left: 150px;
-  border-radius: 15px;
-  padding: 5px 10px;
-  background-color: ${(props) => props.theme.accentColor};
-  color: ${(props) => props.theme.textColor};
-  border: 1px solid ${(props) => props.theme.textColor};
-`;
-
-interface ICoin {
+interface AllCoinsInterface {
   id: string;
   name: string;
   symbol: string;
@@ -75,39 +14,157 @@ interface ICoin {
   type: string;
 }
 
-function CoinView() {
-  const setDarkAtom = useSetRecoilState(isDarkAtom);
-  const isDark = useRecoilValue(isDarkAtom);
-  const toggleDarkAtom = () => setDarkAtom((prev) => !prev);
-  const { isLoading, data } = useQuery<ICoin[]>("allCoins", fetchCoins);
+interface AllTickersInterface {
+  id: string;
+  name: string;
+  symbol: string;
+  rank: number;
+  circulating_supply: number;
+  total_supply: number;
+  max_supply: number;
+  beta_value: number;
+  first_data_at: string;
+  last_updated: string;
+  quotes: {
+    USD: {
+      ath_date: string;
+      ath_price: number;
+      market_cap: number;
+      market_cap_change_24h: number;
+      percent_change_1h: number;
+      percent_change_1y: number;
+      percent_change_6h: number;
+      percent_change_7d: number;
+      percent_change_12h: number;
+      percent_change_15m: number;
+      percent_change_24h: number;
+      percent_change_30d: number;
+      percent_change_30m: number;
+      percent_from_price_ath: number;
+      price: number;
+      volume_24h: number;
+      volume_24h_change_24h: number;
+    };
+  };
+}
+
+const Container = styled.div`
+  border-radius: 10px;
+  max-width: 480px;
+  width: 480px;
+  padding: 40px 10px;
+  box-sizing: border-box;
+  box-shadow: black 5px 5px 20px 0px;
+  margin: 100px 0;
+  background-color: ${(props) => props.theme.bgColor};
+  color: ${(props) => props.theme.textColor};
+`;
+
+const Header = styled.header`
+  margin-bottom: 30px;
+`;
+
+const Title = styled.h1`
+  text-transform: uppercase;
+  text-align: center;
+  font-size: 30px;
+`;
+
+const CoinUl = styled.ul`
+  padding: 20px;
+`;
+
+const CoinNav = styled.div`
+  display: flex;
+  span {
+    color: ${(props) => props.theme.textColor};
+    text-transform: uppercase;
+    font-size: 14px;
+  }
+  span:nth-child(1) {
+    flex: 1;
+  }
+  span:nth-child(2) {
+    flex: 2.5;
+  }
+  span:nth-child(3) {
+    flex: 1.5;
+    text-align: right;
+  }
+`;
+
+const CoinView = () => {
+  const [page, setPage] = useState<number>(1);
+  const [allData, setAllData] = useState<AllTickersInterface[]>([]);
+  const { isLoading: allCoinsLoading, data: allCoinsData } = useQuery<
+    AllCoinsInterface[]
+  >("allCoins", handleFetchAllCoins);
+  const {
+    isLoading: allTickersLoading,
+    data: allTickersData,
+    refetch,
+  } = useQuery<AllTickersInterface[]>("allTickers", () =>
+    handleFetchAllTickers(page)
+  );
+
+  const handleInfiniteScroll = useCallback(async () => {
+    const offsetHeight: number = document.documentElement.offsetHeight;
+    const innerHeight: number = window.innerHeight;
+    const scrollTop: number = document.documentElement.scrollTop;
+
+    if (offsetHeight === innerHeight + scrollTop) {
+      setPage((page: number) => page + 1);
+    }
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleInfiniteScroll);
+    return () => window.removeEventListener("scroll", handleInfiniteScroll);
+  }, [handleInfiniteScroll]);
+
+  useEffect(() => {
+    if (allTickersData) {
+      setAllData((allData: AllTickersInterface[]) => {
+        const result: AllTickersInterface[] = [...allData, ...allTickersData];
+        return result;
+      });
+    }
+  }, [allTickersData]);
+
+  useEffect(() => {
+    refetch();
+  }, [page, refetch]);
 
   return (
     <Container>
-      <Helmet>
-        <title>코인</title>
-      </Helmet>
       <Header>
-        <Title>코인</Title>
-        <ToggleBtn onClick={toggleDarkAtom}>{isDark ? "🌞" : "🌙"}</ToggleBtn>
+        <Title>코인 정보</Title>
       </Header>
-      {isLoading ? (
-        <Loader>Loading...</Loader>
-      ) : (
-        <CoinsList>
-          {data?.slice(0, 100).map((coin) => (
-            <Coin key={coin.id}>
-              <Link href={`/coins/${coin.id}`}>
-                <Img
-                  src={`https://cryptocurrencyliveprices.com/img/${coin.id}.png`}
-                />
-                {coin.name} &rarr;
-              </Link>
-            </Coin>
+      {(allCoinsLoading || allTickersLoading) === true ? null : (
+        <CoinUl>
+          <CoinNav>
+            <span>Rank</span>
+            <span>Volume / Change</span>
+            <span>Price / Change</span>
+          </CoinNav>
+          {allData?.map((coin: AllTickersInterface, index: number) => (
+            <Coin
+              key={coin.id + index}
+              id={coin.id}
+              rank={coin.rank}
+              symbol={coin.symbol}
+              name={coin.name}
+              price={coin.quotes.USD.price}
+              priceChange={coin.quotes.USD.percent_change_24h}
+              volume={coin.quotes.USD.volume_24h}
+              volumeChange={coin.quotes.USD.volume_24h_change_24h}
+              image={`https://cryptocurrencyliveprices.com/img/${coin.id}.png`}
+            />
           ))}
-        </CoinsList>
+        </CoinUl>
       )}
     </Container>
   );
-}
+};
 
 export default CoinView;

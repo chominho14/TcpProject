@@ -1,13 +1,147 @@
-import Link from "next/link";
+import styled from "styled-components";
 
 interface CoinProps {
-  coinId: number;
+  id: string;
+  rank: number;
+  symbol: string;
+  name: string;
+  image: string;
+  price: number;
+  priceChange: number;
+  volume: number;
+  volumeChange: number;
 }
 
-export default function Coin({ coinId }: CoinProps) {
+const CoinLi = styled.li`
+  transition: 0.3s;
+  &:hover {
+    transform: scale(1.025);
+  }
+`;
+
+const CoinContainer = styled.div`
+  display: flex;
+  align-items: center;
+  border-bottom: 2px solid ${(props) => props.theme.textColor};
+  padding: 20px 0px;
+`;
+
+const CoinRankContainer = styled.div`
+  flex: 1;
+  max-width: 65px;
+`;
+
+const CoinRank = styled.span`
+  margin-left: 10px;
+  color: ${(props) => props.theme.textColor};
+`;
+
+const CoinContentContainer = styled.div`
+  flex: 2.5;
+  display: flex;
+  align-items: center;
+`;
+
+const CoinImage = styled.img`
+  width: 50px;
+  height: 50px;
+`;
+
+const CoinContent = styled.div`
+  margin-left: 20px;
+`;
+
+const CoinSymbolContainer = styled.div`
+  margin-bottom: 8px;
+`;
+
+const CoinCapContainer = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const CoinCap = styled.span`
+  font-size: 12px;
+  margin-left: 7px;
+`;
+
+const CoinVolume = styled.span`
+  font-size: 15px;
+  color: ${(props) => props.theme.textColor};
+`;
+
+const CoinSymbol = styled.span`
+  font-weight: bold;
+`;
+
+const CoinName = styled.span`
+  font-size: 15px;
+  margin-left: 8px;
+  color: ${(props) => props.theme.textColor};
+`;
+
+const CoinPriceContainer = styled.div`
+  flex: 1.5;
+  display: flex;
+  flex-direction: column;
+  text-align: right;
+`;
+
+const CoinPrice = styled.span`
+  font-weight: bold;
+  margin-bottom: 8px;
+`;
+
+const CoinChange = styled.span<{ isActive: boolean }>`
+  color: ${(props) =>
+    props.isActive === true ? props.theme.accentColor : props.theme.textColor};
+`;
+
+const Coin = ({
+  id,
+  rank,
+  symbol,
+  name,
+  image,
+  price,
+  priceChange,
+  volume,
+  volumeChange,
+}: CoinProps) => {
   return (
-    <Link href={`/coins/${coinId}`}>
-      <a className="flex w-full cursor-pointer justify-between px-4 pt-5"></a>
-    </Link>
+    <CoinLi>
+      <a>
+        <CoinContainer>
+          <CoinRankContainer>
+            <CoinRank>{rank}</CoinRank>
+          </CoinRankContainer>
+          <CoinContentContainer>
+            <CoinImage src={image} alt={name} />
+            <CoinContent>
+              <CoinSymbolContainer>
+                <CoinSymbol>{symbol}</CoinSymbol>
+                <CoinName>{name}</CoinName>
+              </CoinSymbolContainer>
+              <CoinCapContainer>
+                <CoinVolume>
+                  ${Number(volume.toFixed(2)).toLocaleString("ko-KR")}
+                </CoinVolume>
+                <CoinCap>{volumeChange}%</CoinCap>
+              </CoinCapContainer>
+            </CoinContent>
+          </CoinContentContainer>
+          <CoinPriceContainer>
+            <CoinPrice>
+              ${Number(price.toFixed(2)).toLocaleString("ko-KR")}
+            </CoinPrice>
+            <CoinChange isActive={priceChange > 0}>
+              {priceChange > 0 ? `+${priceChange}` : `${priceChange}`}%
+            </CoinChange>
+          </CoinPriceContainer>
+        </CoinContainer>
+      </a>
+    </CoinLi>
   );
-}
+};
+
+export default Coin;
