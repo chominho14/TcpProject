@@ -39,13 +39,20 @@ export default function Layout({
         <nav>
           <div>
             <div>{children}</div>
-            <Link href="/">
+            {/* <Link href="/">
               <a>Home</a>
             </Link>
             <Link href="/coins">
               <a>Coin</a>
-            </Link>
-            <RealtimeChat />
+            </Link> */}
+            {/* <RealtimeChat /> */}
+            <iframe
+              src="coins/realtimechats"
+              name="left"
+              width="200"
+              height="500"
+            ></iframe>
+            <iframe src="/coins" name="right" width="400" height="500"></iframe>
           </div>
         </nav>
       ) : null}

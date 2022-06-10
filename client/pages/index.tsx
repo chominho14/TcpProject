@@ -1,11 +1,5 @@
 import { NextPage } from "next";
-import Head from "next/head";
-import { ReactQueryDevtools } from "react-query/devtools";
-import { useRecoilValue } from "recoil";
-import { createGlobalStyle, ThemeProvider } from "styled-components";
-import Layout from "../components/layout";
-import { isDarkAtom } from "../utils/atoms";
-import { darkTheme, lightTheme } from "../utils/theme";
+import { createGlobalStyle } from "styled-components";
 
 const GlobalStyle = createGlobalStyle`
 @import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400&display=swap');
@@ -69,18 +63,16 @@ a{
 `;
 
 const Home: NextPage = () => {
-  const isDark = useRecoilValue(isDarkAtom);
-
   return (
-    <Layout title="Home" hasTabBar>
-      <Head>
-        <title>201744059_조민호</title>
-      </Head>
-      <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
-        <ReactQueryDevtools initialIsOpen={true} />
-        <GlobalStyle />
-      </ThemeProvider>
-    </Layout>
+    <div>
+      <iframe
+        src="coins/realtimechats"
+        name="left"
+        width="200"
+        height="500"
+      ></iframe>
+      <iframe src="/coins" name="right" width="400" height="500"></iframe>
+    </div>
   );
 };
 

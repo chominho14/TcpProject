@@ -1,120 +1,81 @@
-import styled from "styled-components";
-import { useQuery } from "react-query";
-import { fetchCoins } from "../../api/api";
-import { Helmet } from "react-helmet";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { createGlobalStyle, ThemeProvider } from "styled-components";
+import { ReactQueryDevtools } from "react-query/devtools";
+import { lightTheme, darkTheme } from "../../utils/theme";
+import { useRecoilValue } from "recoil";
 import { isDarkAtom } from "../../utils/atoms";
-import Layout from "../../components/layout";
-import Link from "next/link";
+import CoinView from "./coinview";
 
-const Container = styled.div`
-  padding: 0px 20px;
-  max-width: 480px;
-  margin: 0 auto;
-`;
-
-const Header = styled.header`
-  height: 10vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-const CoinsList = styled.ul`
-  list-style: none;
-  padding-left: 0px;
-`;
-
-const Coin = styled.li`
-  background-color: ${(props) => props.theme.accentColor};
-  color: ${(props) => props.theme.textColor};
-  border-radius: 15px;
-  margin-bottom: 10px;
-  a {
-    display: flex;
-    align-items: center;
-    padding: 20px;
-    transition: color 0.3s ease-in;
-  }
-  &:hover {
-    a {
-      color: ${(props) => props.theme.hoverColor};
-    }
-  }
-`;
-
-const Title = styled.h1`
-  font-size: 48px;
-  color: ${(props) => props.theme.accentColor};
-`;
-
-const Loader = styled.span`
-  text-align: center;
-  display: block;
-`;
-
-const Img = styled.img`
-  width: 25px;
-  height: 25px;
-  margin-right: 10px;
-`;
-
-const ToggleBtn = styled.button`
-  position: relative;
-  left: 150px;
-  border-radius: 15px;
-  padding: 5px 10px;
-  background-color: ${(props) => props.theme.accentColor};
-  color: ${(props) => props.theme.textColor};
-  border: 1px solid ${(props) => props.theme.textColor};
-`;
-
-interface ICoin {
-  id: string;
-  name: string;
-  symbol: string;
-  rank: number;
-  is_new: boolean;
-  is_active: boolean;
-  type: string;
+const GlobalStyle = createGlobalStyle`
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400&display=swap');
+  html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
 }
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+*{
+  box-sizing:border-box;
+}
+body{
+	font-weight:300;
+  font-family: 'Source Sans Pro', sans-serif;
+  background-color:${(props) => props.theme.bgColor};
+  color:${(props) => props.theme.textColor};
+  line-height: 1.2;
+}
+a{
+  text-decoration:none;
+  color:inherit;
+}
+`;
 
 function Coins() {
-  const setDarkAtom = useSetRecoilState(isDarkAtom);
   const isDark = useRecoilValue(isDarkAtom);
-  const toggleDarkAtom = () => setDarkAtom((prev) => !prev);
-  const { isLoading, data } = useQuery<ICoin[]>("allCoins", fetchCoins);
-
   return (
-    <Layout hasTabBar title="코인">
-      <Container>
-        <Helmet>
-          <title>코인</title>
-        </Helmet>
-        <Header>
-          <Title>코인</Title>
-          <ToggleBtn onClick={toggleDarkAtom}>{isDark ? "🌞" : "🌙"}</ToggleBtn>
-        </Header>
-        {isLoading ? (
-          <Loader>Loading...</Loader>
-        ) : (
-          <CoinsList>
-            {data?.slice(0, 100).map((coin) => (
-              <Coin key={coin.id}>
-                <Link href={`/coins/${coin.id}`}>
-                  <a>
-                    <Img
-                      src={`https://cryptocurrencyliveprices.com/img/${coin.id}.png`}
-                    />
-                    {coin.name}
-                  </a>
-                </Link>
-              </Coin>
-            ))}
-          </CoinsList>
-        )}
-      </Container>
-    </Layout>
+    <>
+      <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
+        <GlobalStyle />
+        <ReactQueryDevtools initialIsOpen={true} />
+        <CoinView />
+      </ThemeProvider>
+    </>
   );
 }
 

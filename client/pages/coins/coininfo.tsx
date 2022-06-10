@@ -6,12 +6,12 @@ import {
   useRouteMatch,
 } from "react-router-dom";
 import styled from "styled-components";
-import Chart from "./coinchart";
-import Price from "./coinprice";
+import Chart from "./[id]/coinchart";
+import Price from "./[id]/coinprice";
 import { Link } from "react-router-dom";
 import { useQuery } from "react-query";
 import { Helmet } from "react-helmet";
-import { fetchCoinTickers, fetchCoinInfo } from "../../../api/api";
+import { fetchCoinTickers, fetchCoinInfo } from "../../api/api";
 
 const Container = styled.div`
   padding: 0px 20px;
@@ -202,6 +202,24 @@ function Coin({}: ICoinProps) {
               <span>{tickersData?.max_supply}</span>
             </OverviewItem>
           </Overview>
+
+          <Tabs>
+            <Tab isActive={chartMatch !== null}>
+              <Link to={`/${coinId}/chart`}>Chart</Link>
+            </Tab>
+            <Tab isActive={priceMatch !== null}>
+              <Link to={`/${coinId}/price`}>Price</Link>
+            </Tab>
+          </Tabs>
+
+          <Switch>
+            <Route path={`/:coinId/price`}>
+              <Price />
+            </Route>
+            <Route path={`/:coinId/chart`}>
+              <Chart coinId={coinId} />
+            </Route>
+          </Switch>
         </>
       )}
     </Container>
