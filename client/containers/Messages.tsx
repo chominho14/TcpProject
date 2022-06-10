@@ -49,7 +49,7 @@ function MessagesContainer() {
                 <span>
                   {username} - {time}
                 </span>
-                <span>{message}</span>
+                <span>: {message}</span>
               </div>
             </div>
           );
