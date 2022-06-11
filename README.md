@@ -32,4 +32,4 @@
 
 ### 결과 화면
 
-<img width="500" height="500" src="https://github.com/chominho14/TcpProject/resultcreenshot/10.png"></img>
+<img width="500" height="500" src="https://github.com/chominho14/TcpProject/blob/main/resultscreenshot/10.png"></img>
