@@ -2,6 +2,12 @@
 
 ---
 
+## 프로젝트 상세설명
+
+Notion - https://gleaming-garlic-1d6.notion.site/3553e6750b5f4109911afd0e14647f43
+
+---
+
 ## 개발 환경
 
 - language : TypeScript
