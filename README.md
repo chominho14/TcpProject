@@ -14,7 +14,11 @@
 
 ---
 
-#### 코인의 정보를 보면서 실시간으로 메시지를 나눌 수 있는 웹 사이트
+### 프로젝트 설명
+
+- 코인의 정보를 보면서 실시간으로 메시지를 나눌 수 있는 웹 사이트
+
+---
 
 ### 기본 구조
 
@@ -27,3 +31,5 @@
 ---
 
 ### 결과 화면
+
+<img width="500" height="500" src="https://github.com/chominho14/TcpProject/resultcreenshot/10.png"></img>
