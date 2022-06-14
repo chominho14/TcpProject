@@ -84,21 +84,22 @@ function RoomsContainer() {
   const newRoomRef = useRef(null);
 
   function handleCreateRoom() {
-    //get the room name
+    // 방 이름을 가져온다.
     const roomName = newRoomRef.current.value || "";
 
     if (!String(roomName).trim()) return;
 
-    // emit room created event
+    // 클라이언트로 방 생성하는 이벤트를 전송한다.
     socket.emit(EVENTS.CLIENT.CREATE_ROOM, { roomName });
 
-    // set room name input to empty string
+    // 방 이름을 빈 문자열로 바꿔준다.
     newRoomRef.current.value = "";
   }
 
   function handleJoinRoom(key) {
     if (key === roomId) return;
 
+    // 클라이언트로 방에 들어가는 이벤트를 전송한다.
     socket.emit(EVENTS.CLIENT.JOIN_ROOM, key);
   }
 

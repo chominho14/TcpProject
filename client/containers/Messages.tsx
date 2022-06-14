@@ -55,6 +55,7 @@ function MessagesContainer() {
       return;
     }
 
+    // 서버에서 클라이언트로 이벤트 전송(메시지)
     socket.emit(EVENTS.CLIENT.SEND_ROOM_MESSAGE, { roomId, message, username });
 
     const date = new Date();

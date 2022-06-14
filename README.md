@@ -40,3 +40,19 @@ Notion - https://gleaming-garlic-1d6.notion.site/3553e6750b5f4109911afd0e14647f4
 
 - 두 클라이언트가 접속하여 채팅방을 만들고 같은 채팅방에 들어가서 대활르 나눌 수 있게 구현하였다.
   <img width="700" height="450" src="https://github.com/chominho14/TcpProject/blob/main/resultscreenshot/10.png"></img>
+
+---
+
+### 소켓 관련 코드
+
+#### 클라이언트 소켓 통신 파일
+
+- /client/context/socket.context.tsx
+- /client/containers/Messages.tsx
+- /client/containers/Rooms.tsx
+
+#### 서버 소켓 통신 파일
+
+- /server/src/app.ts
+
+---
